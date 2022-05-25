@@ -35,12 +35,29 @@ router.get("/login", async(req, res)=>{
         //checking is passwords match
         bcrypt.compare(password, admin.password).then((match)=>{
             if(!match){
-                res.json("Incorrect password")
+                res.json("Incorrect password!")
             }else{
                 res.json(`Welcome, ${admin.firstname}`)
             }
         })
     }
+})
+
+//change password
+router.put("/changepassword", async(req, res)=>{
+    const { username, oldPassword, newPassword } = req.body;
+    const developer = await Admins.findOne({where: { username: username}})
+    //compare passwords
+    bcrypt.compare(oldPassword, developer.password).then((match)=>{
+        if(!match){
+            res.json("Incorrect password!")
+        }else{
+            bcrypt.hash(newPassword, 10).then((encrypted)=>{
+                Admins.update({password: encrypted}, {where: {username: username}})
+                res.json("Password changed successfully")
+            })
+        }
+    })
 })
 
 module.exports = router;

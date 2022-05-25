@@ -43,4 +43,21 @@ router.get("/login", async(req, res)=>{
     }
 })
 
+//change password
+router.put("/changepassword", async(req, res)=>{
+    const { username, oldPassword, newPassword } = req.body;
+    const developer = await Developers.findOne({where: { username: username }})
+    //compare password
+    bcrypt.compare(oldPassword, developer.password).then((match)=>{
+        if(!match){
+            res.json("Incorrect password!")
+        }else{
+            bcrypt.hash(newPassword, 10).then((encrypted)=>{
+                Developers.update({password: encrypted}, {where: {username: username}})
+                res.json("Password changed successfully!")
+            })
+        }
+    })
+})
+
 module.exports = router;
