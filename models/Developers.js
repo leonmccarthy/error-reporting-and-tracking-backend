@@ -18,9 +18,9 @@ module.exports = ( sequelize, DataTypes )=>{
         }
     })
       //association
-    Developers.associate = (models) => {
-        Developers.hasMany(models.Errors, { onDelete: "cascade" })
-    }
+    // Developers.associate = (models) => {
+    //     Developers.hasMany(models.Errors, { onDelete: "cascade" })
+    // }
     
     return Developers;
 }

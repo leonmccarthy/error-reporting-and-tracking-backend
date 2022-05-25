@@ -8,6 +8,7 @@ const cors = require("cors")
 const userRouter = require('./routers/Users');
 const developerRouter = require('./routers/Developers')
 const adminRouter = require('./routers/Admins')
+const errorRouter = require('./routers/Errors')
 
 //used to allow usage of json in api request
 app.use(express.json())
@@ -17,7 +18,8 @@ app.use(cors())
 //applying routers
 app.use("/auth", userRouter);
 app.use("/devauth", developerRouter);
-app.use("/admauth", adminRouter)
+app.use("/admauth", adminRouter);
+app.use("/error", errorRouter);
 
 db.sequelize.sync().then(()=>{
     app.listen(3001, ()=>{
