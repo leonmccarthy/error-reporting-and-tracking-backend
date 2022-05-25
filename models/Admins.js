@@ -17,5 +17,9 @@ module.exports = ( sequelize, DataTypes )=>{
             allowNull: false
         }
     })
+    Admins.associate = (models)=>{
+        Admins.hasMany(models.Developers, { onDelete: "cascade" })
+    }
+    
     return Admins;
 }
