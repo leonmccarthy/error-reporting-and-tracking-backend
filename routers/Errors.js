@@ -18,6 +18,12 @@ router.post("/", async(req, res)=>{
         })
         res.json("Error reported successfully")
     }
+});
+
+//displaying all errors
+router.get("/", async(req, res)=>{
+    const errors = await Errors.findAll();
+    res.json(errors);
 })
 
 module.exports = router ;

@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        priority: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         developerassigned: {
             type: DataTypes.STRING,
             allowNull: false

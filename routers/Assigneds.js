@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { Assigneds } = require("../models");
+const { Assigneds, Developers } = require("../models");
 
 //assigning error
 router.post("/", async(req, res)=>{
     const { errorName, errorDescription, errorSteps,
-         username, developerAssigned, stepsToComplete, stepsDone } = req.body;
+         username, developerAssigned, priority, stepsToComplete, stepsDone } = req.body;
     const assigned = await Assigneds.findOne({ where: { errorDescription: errorDescription }});
     //checking if the error has been assigned already
     if(assigned){
@@ -16,10 +16,14 @@ router.post("/", async(req, res)=>{
             errorDescription: errorDescription,
             errorSteps: errorSteps,
             createdBy: username,
+            priority: priority,
             developerassigned: developerAssigned,
             stepsToComplete: stepsToComplete,
             stepsDone: stepsDone
-        })
+        });
+        // const dev = await Developers.findOne({where:{username: developerAssigned}});
+        // const devId = dev.id;
+        // Assigneds.update({DeveloperId: devId},{where: {developerAssigned: developerAssigned}})
         res.json("Error has been successfully assigned");
     }
 })
