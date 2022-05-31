@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Admins } = require("../models");
 const bcrypt = require("bcryptjs");
+const { sign } = require("jsonwebtoken")
 
 //registering admin
 router.post("/", async(req, res)=>{
@@ -37,7 +38,10 @@ router.get("/login", async(req, res)=>{
             if(!match){
                 res.json("Incorrect password!")
             }else{
-                res.json(`Welcome, ${admin.firstname}`)
+                // const accessToken = sign( {username: admin.username, id: admin.id}, "importantsecuritycode" );
+
+                // res.json( {accessToken: accessToken, username: admin.username, id: admin.id} );
+                res.json(`Welcome, ${username}`)
             }
         })
     }
