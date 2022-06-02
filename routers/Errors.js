@@ -8,7 +8,7 @@ router.post("/", async(req, res)=>{
     const error = await Errors.findOne({where: {errorDescription: errorDescription}});
     //checking if descriptions exist
     if(error){
-        res.json("The error description has been repoted already!")
+        res.json({error: "The error description has been repoted already!"})
     }else{
         Errors.create({
             errorName: errorName,

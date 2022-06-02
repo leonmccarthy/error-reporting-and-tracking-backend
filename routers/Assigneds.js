@@ -9,7 +9,7 @@ router.post("/", async(req, res)=>{
     const assigned = await Assigneds.findOne({ where: { errorDescription: errorDescription }});
     //checking if the error has been assigned already
     if(assigned){
-        res.json("The error is already assigned to a developer");
+        res.json({error: "The error is already assigned to a developer"});
     }else{
         Assigneds.create({
             errorName: errorName,
@@ -34,7 +34,7 @@ router.put("/steps", async(req, res)=>{
     const error = await Assigneds.findOne({ where: { errorDescription: errorDescription} });
 
     if(!error){
-        res.json("Error does not exist")
+        res.json({error: "Error does not exist"})
     }else{
         Assigneds.update({ stepsToComplete: stepsToComplete}, { where: { errorDescription: errorDescription}});
         res.json("Number of steps to solve the error entered successfully");
@@ -47,7 +47,7 @@ router.put("/stepsdone", async(req, res)=>{
     const error = await Assigneds.findOne({ where: { errorDescription: errorDescription} });
 
     if(!error){
-        res.json("Error does not exist")
+        res.json({error: "Error does not exist"})
     }else{
         Assigneds.update({ stepsDone: stepsDone}, { where: { errorDescription: errorDescription}});
         res.json("Number of steps done to solve the error updated successfully");

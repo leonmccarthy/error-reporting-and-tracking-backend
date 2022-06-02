@@ -9,7 +9,7 @@ router.post("/", async(req, res)=>{
     const user = await Users.findOne({where: {username :username}});
     //checking if the user exists
     if(user){
-        res.json("User account already exists");
+        res.json({error: "User account already exists"});
     } else{
         //encrypting password
         bcrypt.hash(password, 10).then((encrypted)=>{
@@ -26,18 +26,18 @@ router.post("/", async(req, res)=>{
 })
 
 // logging in users
-router.get("/login", async(req, res)=>{
+router.post("/login", async(req, res)=>{
     const { username, password } = req.body;
     const user = await Users.findOne({ where : { username: username}});
     if(!user){
-        res.json("User does not exist! Please register an account")
+        res.json({error: "User does not exist! Please register an account"})
     } else{
         //comparing login password with already created password
         bcrypt.compare(password, user.password).then((match)=>{
             if(match){
                 res.json(`Welcome, ${user.firstname}`)
             }else{
-                res.json("Incorrect password!")
+                res.json({error: "Incorrect password!"})
             }
         })
     }
@@ -50,7 +50,7 @@ router.put("/changepassword", async(req, res)=>{
     //compare password
     bcrypt.compare(oldPassword, user.password).then((match)=>{
         if(!match){
-            res.json("Incorrect password!")
+            res.json({error: "Incorrect password!"})
         }else{
             bcrypt.hash(newPassword, 10).then((encrypted)=>{
                Users.update({password: encrypted},{where: {username: username}})

@@ -10,7 +10,7 @@ router.post("/", async (req, res)=>{
     
     //checking s developer exists
     if(developer){
-        res.json("Developer account already exist!")
+        res.json({error: "Developer account already exist!"})
     }else{
         bcrypt.hash(password, 10).then((encrypted)=>{
             Developers.create({
@@ -25,17 +25,17 @@ router.post("/", async (req, res)=>{
 })
 
 //logging in developer
-router.get("/login", async(req, res)=>{
+router.post("/login", async(req, res)=>{
     const { username, password } = req.body;
     const developer = await Developers.findOne({ where: { username : username }});
 
     if(!developer){
-        res.json("Developer account does not exist! Please crate an account")
+        res.json({error: "Developer account does not exist! Please create an account"})
     }else{
         //comparing encrypted password with current password
         bcrypt.compare(password, developer.password).then((match)=>{
             if(!match){
-                res.json("Incorrect password!")
+                res.json({error: "Incorrect password!"})
             }else{
                 res.json(`Welcome, ${developer.firstname}`)
             }
@@ -50,7 +50,7 @@ router.put("/changepassword", async(req, res)=>{
     //compare password
     bcrypt.compare(oldPassword, developer.password).then((match)=>{
         if(!match){
-            res.json("Incorrect password!")
+            res.json({error: "Incorrect password!"})
         }else{
             bcrypt.hash(newPassword, 10).then((encrypted)=>{
                 Developers.update({password: encrypted}, {where: {username: username}})

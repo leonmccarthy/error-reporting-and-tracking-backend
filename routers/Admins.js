@@ -10,7 +10,7 @@ router.post("/", async(req, res)=>{
     const admin = await Admins.findOne({ where: { username: username }});
     //checking if the user already exist
     if(admin){
-        res.json("Admin account already exist!")
+        res.json({error: "Admin account already exist!"})
     }else{
         //encrypting the password
         bcrypt.hash(password, 10).then((encrypted)=>{
@@ -26,17 +26,17 @@ router.post("/", async(req, res)=>{
 })
 
 //logging in admin
-router.get("/login", async(req, res)=>{
+router.post("/login", async(req, res)=>{
     const { username, password } = req.body;
     const admin = await Admins.findOne({ where: { username: username}})
     //checking if admin account exist
     if(!admin){
-        res.json("Admin account does not exist!")
+        res.json({error: "Admin account does not exist!"})
     }else{
         //checking is passwords match
         bcrypt.compare(password, admin.password).then((match)=>{
             if(!match){
-                res.json("Incorrect password!")
+                res.json({error: "Incorrect password!"})
             }else{
                 // const accessToken = sign( {username: admin.username, id: admin.id}, "importantsecuritycode" );
 
