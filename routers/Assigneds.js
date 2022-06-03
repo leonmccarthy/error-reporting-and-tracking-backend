@@ -54,4 +54,10 @@ router.put("/stepsdone", async(req, res)=>{
     }
 })
 
+//viewing all assigned errors
+router.get("/display", async(req, res)=>{
+    const assigned = await Assigneds.findAll();
+    res.json(assigned);
+});
+
 module.exports = router;
