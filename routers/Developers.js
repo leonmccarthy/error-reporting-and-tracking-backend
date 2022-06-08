@@ -60,4 +60,11 @@ router.put("/changepassword", async(req, res)=>{
     })
 })
 
+//displaying all developers
+router.get("/displayAll", async(req, res)=>{
+    const allDev = await Developers.findAll();
+    res.json(allDev)
+})
+
+
 module.exports = router;

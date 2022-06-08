@@ -25,5 +25,17 @@ router.get("/", async(req, res)=>{
     const errors = await Errors.findAll();
     res.json(errors);
 })
+router.get("/byId/:id", async(req, res)=>{
+    const id = req.params.id;
+    const errorById = await Errors.findOne({where: { id: id}});
+    // if(!errorById){
+    //     res.json({error: "An error by that id does not exist"});
+    // }else{
+        //convert errorById into an array
+        res.json([errorById]);
+        // 
+        
+    // }
+})
 
 module.exports = router ;
