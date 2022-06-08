@@ -60,4 +60,11 @@ router.get("/display", async(req, res)=>{
     res.json(assigned);
 });
 
+//display by id
+router.get("/display/byId/:id", async(req, res)=>{
+    const id = req.params.id;
+    const assignedById = await Assigneds.findOne({where: {id: id}});
+    res.json([assignedById])
+})
+
 module.exports = router;
