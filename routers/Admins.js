@@ -3,6 +3,7 @@ const router = express.Router();
 const { Admins } = require("../models");
 const bcrypt = require("bcryptjs");
 const { sign } = require("jsonwebtoken")
+const { validateToken } = require("../middlewares/AuthMiddleware")
 
 //registering admin
 router.post("/", async(req, res)=>{
@@ -38,17 +39,23 @@ router.post("/login", async(req, res)=>{
             if(!match){
                 res.json({error: "Incorrect password!"})
             }else{
-                // const accessToken = sign( {username: admin.username, id: admin.id}, "importantsecuritycode" );
+                const accessToken = sign( {username: admin.username, id: admin.id, role: "admin"}, "importantsecuritycode" );
 
-                // res.json( {accessToken: accessToken, username: admin.username, id: admin.id} );
-                res.json(`Welcome, ${username}`)
+                res.json( {accessToken: acceaccessTokenssToken, username: admin.username, id: admin.id, role: "admin", message: `Welcome, ${username}`} );
+                // res.json(`Welcome, ${username}`)
             }
         })
     }
 })
 
+//checking if validate token 
+router.get("/auth", validateToken, async(req,res)=>{
+    res.json(req.admin)
+})
+
+
 //change password
-router.put("/changepassword", async(req, res)=>{
+router.put("/changepassword", validateToken, async(req, res)=>{
     const { username, oldPassword, newPassword } = req.body;
     const developer = await Admins.findOne({where: { username: username}})
     //compare passwords

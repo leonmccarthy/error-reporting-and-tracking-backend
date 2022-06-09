@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { Assigneds, Developers } = require("../models");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 //assigning error
-router.post("/", async(req, res)=>{
+router.post("/", validateToken, async(req, res)=>{
     const { errorName, errorDescription, errorSteps,
          username, developerAssigned, priority, stepsToComplete, stepsDone } = req.body;
     const assigned = await Assigneds.findOne({ where: { errorDescription: errorDescription }});
@@ -29,7 +30,7 @@ router.post("/", async(req, res)=>{
 })
 
 //inputing no of steps
-router.put("/steps", async(req, res)=>{
+router.put("/steps", validateToken, async(req, res)=>{
     const { errorDescription, stepsToComplete } = req.body;
     const error = await Assigneds.findOne({ where: { errorDescription: errorDescription} });
 
@@ -42,7 +43,7 @@ router.put("/steps", async(req, res)=>{
 })
 
 //inputing no of steps
-router.put("/stepsdone", async(req, res)=>{
+router.put("/stepsdone", validateToken, async(req, res)=>{
     const { errorDescription, stepsDone } = req.body;
     const error = await Assigneds.findOne({ where: { errorDescription: errorDescription} });
 

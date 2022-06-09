@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { Errors } = require("../models")
+const { Errors } = require("../models");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 //creating error
-router.post("/", async(req, res)=>{
+router.post("/", validateToken, async(req, res)=>{
     const { errorName, errorDescription, errorSteps, username } = req.body;
     const error = await Errors.findOne({where: {errorDescription: errorDescription}});
     //checking if descriptions exist

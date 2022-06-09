@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { Developers } = require("../models");
 const bcrypt = require("bcryptjs");
+const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 //registering developers
 router.post("/", async (req, res)=>{
@@ -37,14 +39,22 @@ router.post("/login", async(req, res)=>{
             if(!match){
                 res.json({error: "Incorrect password!"})
             }else{
-                res.json(`Welcome, ${developer.firstname}`)
+                const accessToken = sign({username: developer.username, id: developer.id, role: "developer"}, "importantsecuritycode")
+
+                res.json({ accessToken: accessToken, username: developer.username, id: developer.id, role: "developer", message: `Welcome, ${developer.firstname}`})
+                // res.json(`Welcome, ${developer.firstname}`)
             }
         })
     }
 })
 
+//checking if validate token 
+router.get("/auth", validateToken, async(req,res)=>{
+    res.json(req.developer)
+})
+
 //change password
-router.put("/changepassword", async(req, res)=>{
+router.put("/changepassword",validateToken, async(req, res)=>{
     const { username, oldPassword, newPassword } = req.body;
     const developer = await Developers.findOne({where: { username: username }})
     //compare password

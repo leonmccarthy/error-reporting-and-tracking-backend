@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { Users } = require('../models');
 const bcrypt = require('bcryptjs');
+const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 // creating/registering users      ********NEED TO ADD FIELDS********
 router.post("/", async(req, res)=>{
@@ -35,12 +37,19 @@ router.post("/login", async(req, res)=>{
         //comparing login password with already created password
         bcrypt.compare(password, user.password).then((match)=>{
             if(match){
-                res.json(`Welcome, ${user.firstname}`)
+                const accessToken = sign({username: user.username, id: user.id, role: "user"}, "importantsecuritycode");
+                res.json({ accessToken: accessToken, username: user.username, id: user.id, role: "user", message: `Welcome, ${user.firstname}`})
+                // res.json(`Welcome, ${user.firstname}`)
             }else{
                 res.json({error: "Incorrect password!"})
             }
         })
     }
+})
+
+//checking if validate token 
+router.get("/auth", validateToken, async(req,res)=>{
+    res.json(req.user)
 })
 
 //change password
