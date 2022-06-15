@@ -41,7 +41,7 @@ router.post("/login", async(req, res)=>{
             }else{
                 const accessToken = sign( {username: admin.username, id: admin.id, role: "admin"}, "importantsecuritycode" );
 
-                res.json( {accessToken: acceaccessTokenssToken, username: admin.username, id: admin.id, role: "admin", message: `Welcome, ${username}`} );
+                res.json( {accessToken: accessToken, username: admin.username, id: admin.id, role: "admin", message: `Welcome, ${admin.firstname}`} );
                 // res.json(`Welcome, ${username}`)
             }
         })
@@ -57,18 +57,20 @@ router.get("/auth", validateToken, async(req,res)=>{
 //change password
 router.put("/changepassword", validateToken, async(req, res)=>{
     const { username, oldPassword, newPassword } = req.body;
-    const developer = await Admins.findOne({where: { username: username}})
-    //compare passwords
-    bcrypt.compare(oldPassword, developer.password).then((match)=>{
+    const admin = await Admins.findOne({ where: { username: username}})
+
+    // compare passwords
+    bcrypt.compare(oldPassword, admin.password).then((match)=>{
         if(!match){
-            res.json("Incorrect password!")
+            res.json({error: "Incorrect password!"})
         }else{
             bcrypt.hash(newPassword, 10).then((encrypted)=>{
                 Admins.update({password: encrypted}, {where: {username: username}})
-                res.json("Password changed successfully")
+                res.json("Password changed successfully!")
             })
         }
     })
 })
+
 
 module.exports = router;
